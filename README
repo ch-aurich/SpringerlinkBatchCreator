@@ -1,3 +1,6 @@
 springerlinkBatchCreator.user.js is a Greasemonkey Skript
 
-to install it, just open it with firefox (with installed Greasemonkey) and follow the instructions
+to install it you should go to http://c-aurich.de/wordpress/software/springerlink-batchcreator/ and download it there. Greasemonkey will install the skript automatically.
+If you want to be sure to get the latest version of the software you have to check the files out by using git command line tool or similar and install it to firefox manually. Opening it directly from github-website seems not to work correctly because it just produces html code.
+
+
