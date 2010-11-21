@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           SpringerBatchloadListCreator
-// @namespace      http://c-aurich.de
+// @namespace      c-aurich.de
 // @description    create a batchlist that is compatible to bakermans batchload for springer books
 // @include        http://*springerlink.com/*
 // ==/UserScript==
