@@ -5,12 +5,58 @@
 // @include        http://*springerlink.com/*
 // ==/UserScript==
 
+// GM_* replacement functions added from http://userscripts.org/topics/41177
+// @copyright      2009, 2010 James Campos
+// @license        cc-by-3.0; http://creativecommons.org/licenses/by/3.0/
+if (typeof GM_deleteValue == 'undefined') {
+  GM_addStyle = function(css) {
+  	var style = document.createElement('style');
+  	style.textContent = css;
+  	document.getElementsByTagName('head')[0].appendChild(style);
+  }
+  GM_deleteValue = function(name) {
+    localStorage.removeItem(name);
+  }
+
+  GM_getValue = function(name, defaultValue) {
+    var value = localStorage.getItem(name);
+    if (!value)
+      return defaultValue;
+    var type = value[0];
+    value = value.substring(1);
+    switch (type) {
+      case 'b':
+        return value == 'true';
+      case 'n':
+        return Number(value);
+      default:
+        return value;
+    }
+  }
+
+  GM_log = function(message) {
+    console.log(message);
+  }
+
+  GM_openInTab = function(url) {
+    return window.open(url, "_blank");
+  }
+
+  GM_registerMenuCommand = function(name, funk) {
+    //todo
+  }
+
+  GM_setValue = function(name, value) {
+    value = (typeof value)[0] + value;
+    localStorage.setItem(name, value);
+  }
+}
 
 function stripHTML(oldString) {
-    var newString = "";
-    var inTag = false;
-    for(var i = 0; i < oldString.length; i++) 
-    {  
+  var newString = "";
+  var inTag = false;
+  for(var i = 0; i < oldString.length; i++) 
+  {  
         if(oldString.charAt(i) == '<') inTag = true;
         if(oldString.charAt(i) == '>') 
         {
@@ -133,8 +179,8 @@ function addBookToBatch()
 
     var isbn = getRecentISBN();
     var title = getElementByClass("h1", "title");
-    var strTitle = stripHTML(title.innerHTML);
-    
+    //var strTitle = stripHTML(title.innerHTML);
+
     SpringerCounter = GM_getValue("SpringerCounter", 0);
     SpringerCounter++;
     GM_setValue("SpringerCounter", SpringerCounter)
@@ -239,10 +285,24 @@ function alertBooks()
 var elAuthors, newElement, isBookElement, isBook;
 
 isBook = false;
-isBookElement = getElementByClass("li", "first ui-state-default ui-corner-top ui-tabs-selected ui-state-active");
-if (isBookElement&&isBookElement.innerHTML=="<a href=\"#BookSection\">Book</a>")
+try
 {
-    isBook = true;
+    bookidentifier = document.getElementById("ctl00_ContentToolbar_ctl00_SubjectLink");
+    if (bookidentifier != null)
+    {
+      isBook = true;
+      //alert("is book");
+    }
+    else
+    {
+	    isBook = false;
+	    //alert("not a book");
+    }
+}
+catch (e)
+{
+    isBook = false;
+    //alert("not a book");
 }
 
 var elAbout = document.getElementById("Cockpit");
@@ -265,10 +325,6 @@ if (elAbout)
 
 if (isBook) 
 {    
-    /*
-    elAuthors = getElementByClass("p", "authors");
-    if (!elAuthors) elAuthors = getElementByClass("p", "editors");
-    */
     elBooklist = document.getElementById("booklistcaption");
     newElement = document.createElement('p');
     newElement.id = "SpringerBatchLink";
